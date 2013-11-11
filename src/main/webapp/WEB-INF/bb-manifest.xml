@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://www.blackboard.com/bb-manifest-plugin"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://www.blackboard.com/bb-manifest-plugin https://maven.blackboard.com/content/repositories/releases/blackboard/platform/bb-manifest-plugin/9.1.110082.0/bb-manifest-plugin-9.1.110082.0.xsd">
+  <plugin>
+
+    <name value="BBDN LTI 1.0 Sample" />
+    <handle value="bbdn-lti1-sample" />
+    <description value="Sample Building Block for creating an LTI launch object and connecting to a third party LTI Tool Provider." />
+    <default-locale value="en_US" />
+
+    <version value="1.0.0" />
+    <requires>
+      <bbversion value="9.1" />
+    </requires>
+
+    <vendor>
+      <id value="bbdn" />
+      <name value="Blackboard Developer Network" />
+      <url value="http://developer.blackboard.com" />
+      <description value="Blackboard Developer Network" />
+    </vendor>
+
+
+    <!-- These two JSPs are displayed when the "remove" and "properties" buttons --> 
+    <!-- are pressed on the Building Blocks administration page. -->
+    <http-actions>
+      <config value="config.jsp"/>
+    </http-actions>
+
+    <application-defs>
+      <application handle="bbdn-lti1.0-sample" type="shared" use-ssl="false" 
+                   name="BBDN LTI 1.0 Sample" can-allow-guest="false">
+        <description lang="en_US"></description>
+        <links>
+          <link>
+            <type value="tool"/>
+            <name value="BBDN LTI 1.0 Tool"/>
+            <url value="index.jsp" />
+            <description value="Tool to launch to Basic LTI tool provider as defined in the configuration page." />
+          </link>
+        </links>
+      </application>
+    </application-defs>
+
+    <permissions>
+      <permission type="attribute" name="user.authinfo" actions="get"/>
+      <permission type="attribute" name="user.personalinfo" actions="get,set"/>
+      <permission type="java.lang.RuntimePermission" name="preferences"/>
+      <permission type="blackboard.platform.blti.BasicLTIPermission" name="wiscrowd.appspot.com" actions="sendroles,sendemail,sendname"/>
+      
+      <!-- We need these permissions to allow Spring to auto-discover -->
+      <!-- and wire beans together and Hibernate to interact with objects. -->
+      <!--
+      <permission type="java.lang.reflect.ReflectPermission" name="suppressAccessChecks" />
+      <permission type="java.lang.RuntimePermission" name="accessDeclaredMembers" />
+      <permission type="java.lang.RuntimePermission" name="createClassLoader" />
+      <permission type="java.lang.RuntimePermission" name="setContextClassLoader" />
+      <permission type="java.io.FilePermission" name="${java.home}/lib/*" actions="read" />
+      -->
+    </permissions>
+
+  </plugin>
+</manifest>
