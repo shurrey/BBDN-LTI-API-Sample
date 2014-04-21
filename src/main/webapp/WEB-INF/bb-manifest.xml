@@ -1,64 +1,175 @@
-<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns="http://www.blackboard.com/bb-manifest-plugin"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://www.blackboard.com/bb-manifest-plugin https://maven.blackboard.com/content/repositories/releases/blackboard/platform/bb-manifest-plugin/9.1.110082.0/bb-manifest-plugin-9.1.110082.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/* Copyright (C) 2011, Blackboard Inc.
+ * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  - Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *
+ *  - Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ *
+ *  - Neither the name of Blackboard Inc. nor the names of its contributors 
+ *     may be used to endorse or promote products derived from this 
+ *     software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY BLACKBOARD INC ``AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL BLACKBOARD INC. BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+ 
+/*
+ *	Author: 				Scott Hurrey
+ *	Description:			bb-manifest file for Basic LTI Launcher Building Block
+ *	Date Created:			12/03/2010
+ *	Comments:				
+ *	ToDo:					
+ */
+-->
+<manifest>
+  <!-- core extension information -->
   <plugin>
-
-    <name value="BBDN LTI 1.0 Sample" />
-    <handle value="bbdn-lti1-sample" />
-    <description value="Sample Building Block for creating an LTI launch object and connecting to a third party LTI Tool Provider." />
-    <default-locale value="en_US" />
-
-    <version value="1.0.0" />
+    <name value= "LTI 1.1 Sample Code"/>
+    <handle value= "lti1.1 Sample"/>
+    <description value= "Sample code demonstrating the LTI 1.1 connection APIs"/>
+    <default-locale value="en_US"/>
+    <version value= "1.0.0"/>
     <requires>
-      <bbversion value="9.1" />
+    	<bbversion value="9.1.0"/>
     </requires>
-
     <vendor>
-      <id value="bbdn" />
-      <name value="Blackboard Developer Network" />
-      <url value="http://developer.blackboard.com" />
-      <description value="Blackboard Developer Network" />
+      <id value="bbdn"/>
+      <name value="Blackboard Developers Network"/>
+      <url value="http://www.blackboard.com" />
+      <description value="Blackboard Developers Network" />
     </vendor>
-
-
-    <!-- These two JSPs are displayed when the "remove" and "properties" buttons --> 
-    <!-- are pressed on the Building Blocks administration page. -->
     <http-actions>
-      <config value="config.jsp"/>
+      <config value="admin/config.jsp"/>
+      <remove value="admin/remove.jsp"/>
     </http-actions>
-
+    
+    <!-- Custom content types defined by this extension -->
+    <content-handlers>
+      <content-handler>
+        <name value="IMS Global Content"/>
+        <handle value= "resource/x-bbap-lti1-sample1"/>
+        <http-actions>
+          <create value="contentHandlers/create.jsp?contentType=content"/>
+          <modify value="contentHandlers/modify.jsp?contentType=content"/>
+          <view value="contentHandlers/view.jsp"/>
+        </http-actions>
+        <icons>
+          <toolbar value="images/bbapSmall.gif"/>
+          <listitem value="images/bbapLogo.gif"/>
+        </icons>
+        <types>
+         <type>
+          <action-type value="collaborate"/>
+          <create-text value="create"/>
+         </type>
+        </types>
+      </content-handler>
+      <content-handler>
+        <name value="IMS Global Assessment"/>
+        <handle value= "resource/x-bbap-lti1-sample2"/>
+        <http-actions>
+          <create value="contentHandlers/create.jsp?contentType=assessment"/>
+          <modify value="contentHandlers/modify.jsp?contentType=assessment"/>
+          <view value="contentHandlers/view.jsp"/>
+        </http-actions>
+        <icons>
+          <toolbar value="images/bbapSmall.gif"/>
+          <listitem value="images/bbapLogo.gif"/>
+        </icons>
+        <types>
+         <type>
+          <action-type value="evaluate"/>
+          <create-text value="create"/>
+         </type>
+        </types>
+      </content-handler>
+    </content-handlers>
+    
+    <!-- Tools defined by this extension -->
     <application-defs>
-      <application handle="bbdn-lti1.0-sample" type="shared" use-ssl="false" 
-                   name="BBDN LTI 1.0 Sample" can-allow-guest="false">
-        <description lang="en_US"></description>
+      <application handle="lti1.1Sample" type="shared" use-ssl="false" name="LTI 1.1 Sample" can-allow-guest="false"
+        is-course-tool="true" is-group-tool="true" is-org-tool="true" is-sys-tool="true">
+        <description lang="en_US">LTI 1.1 - Blackboard API Sample Code</description>
+        <icons>
+         <small value="images/bbapSmall.gif"/>
+         <tree value="images/bbapSmall.gif"/>
+         <large value="images/bbapLogo.gif"/>
+        </icons>        
         <links>
           <link>
             <type value="tool"/>
-            <name value="BBDN LTI 1.0 Tool"/>
-            <url value="index.jsp" />
-            <description value="Tool to launch to Basic LTI tool provider as defined in the configuration page." />
+            <name value="LTI 1.1 Sample"/>
+            <url value="tools/bltiTool.jsp" />
+            <description value="LTI 1.1 Sample" />
+            <icons>
+              <listitem value="images/bbapLogo.gif"/>
+            </icons>
+          </link>
+          <link>
+            <type value="course_tool"/>
+            <name value="LTI 1.1 Course Tool"/>
+            <url value="tools/bltiCourseTool.jsp" />
+            <description value="LTI 1.1 Course Tool" />
+            <icons>
+              <listitem value="images/bbapLogo.gif"/>
+            </icons>
+          </link>
+          <link>
+            <type value="user_tool"/>
+            <name value="LTI 1.1 User Tool"/>
+            <url value="tools/bltiUserTool.jsp" />
+            <description value="LTI 1.1 User Tool" />
+            <icons>
+              <listitem value="images/bbapLogo.gif"/>
+            </icons>
+          </link>
+          <link>
+            <type value="system_tool"/>
+            <name value="LTI 1.1 System Tool"/>
+            <url value="tools/bltiSystemTool.jsp" />
+            <description value="LTI 1.1 System Tool" />
+            <icons>
+              <listitem value="images/bbapLogo.gif"/>
+            </icons>
           </link>
         </links>
       </application>
     </application-defs>
-
+    
+        <!-- code permissions required for proper operation -->
     <permissions>
-      <permission type="attribute" name="user.authinfo" actions="get"/>
-      <permission type="attribute" name="user.personalinfo" actions="get,set"/>
-      <permission type="java.lang.RuntimePermission" name="preferences"/>
+      <permission type="persist" name="*" actions="create,modify,delete,persist"/>
+      <permission type="attribute" name="user.*" actions="get,set"/>
+      <permission type="attribute" name="user.authinfo" actions="get,set"/>
+      <permission type="attribute" name="user.personalinfo" actions="get,set" />
+      <permission type="java.io.FilePermission" name="&amp;lt;&amp;lt;ALL FILES&amp;gt;&amp;gt;" actions="read,write,delete,execute"/>
+      <permission type="persist" name="OutcomeDefinition" actions="create,modify,delete"/>
+      <permission type="persist" name="Content" actions="create,modify,delete"/>
+      <permission type="java.util.PropertyPermission"  name="*" actions="read,write"/>
+      <permission type="javax.management.MBeanPermission" name="*" actions="registerMBean,unregisterMBean"/>
+      <permission type="socket" name="*" actions="listen,connect,resolve" />
+      <permission type="runtime" name="javax.servlet.jsp.jstl"/>
+      <permission type="runtime" name="accessClassInPackage.*"/>
+      <permission type="runtime" name="accessDeclaredMembers"/>
+      <permission type="runtime" name ="preferences"/>
       <permission type="blackboard.platform.blti.BasicLTIPermission" name="wiscrowd.appspot.com" actions="sendroles,sendemail,sendname"/>
-      
-      <!-- We need these permissions to allow Spring to auto-discover -->
-      <!-- and wire beans together and Hibernate to interact with objects. -->
-      <!--
-      <permission type="java.lang.reflect.ReflectPermission" name="suppressAccessChecks" />
-      <permission type="java.lang.RuntimePermission" name="accessDeclaredMembers" />
-      <permission type="java.lang.RuntimePermission" name="createClassLoader" />
-      <permission type="java.lang.RuntimePermission" name="setContextClassLoader" />
-      <permission type="java.io.FilePermission" name="${java.home}/lib/*" actions="read" />
-      -->
+      <permission type="blackboard.platform.blti.BasicLTIPermission" name="www.imsglobal.org" actions="sendroles,sendemail,sendname"/>
     </permissions>
-
   </plugin>
+
 </manifest>
