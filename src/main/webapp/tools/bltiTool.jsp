@@ -86,7 +86,7 @@
   customParamMap.put("linkType","Blackboard Tool");
   
   Preferences prefs = Preferences.systemRoot();
-  bltiUrl = prefs.get( BLTI_URL,"http://www.imsglobal.org/developers/BLTI/tool.php" );
+  bltiUrl = prefs.get( BLTI_URL,"http://www.imsglobal.org/developers/LTI/test/v1p1/tool.php" );
   bltiKey = prefs.get( BLTI_KEY, "blti_key_default" );
   bltiSecret = prefs.get( BLTI_SECRET, "secret" );
   %>
