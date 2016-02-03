@@ -6,6 +6,7 @@
 .project
 .metadata
 bin/
+.gradle
 tmp/
 *.tmp
 *.bak
