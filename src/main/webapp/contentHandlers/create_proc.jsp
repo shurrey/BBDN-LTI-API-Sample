@@ -41,8 +41,10 @@
                 java.text.*,
                 blackboard.data.*,
                 blackboard.persist.*,
+                blackboard.data.blti.*,
                 blackboard.data.course.*,
                 blackboard.data.user.*,
+                blackboard.persist.blti.*,
                 blackboard.persist.course.*,
                 blackboard.data.content.*,
                 blackboard.persist.content.*,
@@ -68,27 +70,23 @@
 <%@ taglib uri="/bbNG" prefix="bbNG"%>
 
 
-<bbNG:learningSystemPage>
+<bbNG:learningSystemPage entitlement="course.control_panel.VIEW" ctxId="ctx">
 
 <%
   if (!PlugInUtil.authorizeForCourseControlPanel(request, response))
     return;
 
-  FormattedText bltiDescription = new FormattedText("Basic LTI Connection to IMS Global via Blackboard Building Block API",FormattedText.Type.PLAIN_TEXT);
-  
-   PlugInManager pluginMngr = PlugInManagerFactory.getInstance();
-
-  // retrieve the Db persistence manager from the persistence service
-  BbPersistenceManager bbPm = PersistenceServiceFactory.getInstance().getDbPersistenceManager();
-
-  // Create a multi-part request instance
+   // Create a multi-part request instance
   MultipartRequest mr = FileSystemServiceFactory.getInstance().processUpload( request );
 
-  Id courseId = bbPm.generateId( Course.DATA_TYPE, mr.getParameter( "course_id" ) );
-  Id folderId = bbPm.generateId( CourseDocument.DATA_TYPE, mr.getParameter("content_id") );
+  String course_id = mr.getParameter( "course_id" );
+  String folder_id = mr.getParameter( "content_id" );
 
-  ContentDbLoader loader = (ContentDbLoader) bbPm.getLoader( ContentDbLoader.TYPE );
-  ContentDbPersister persister= (ContentDbPersister) bbPm.getPersister( ContentDbPersister.TYPE );
+  Id courseId = Id.generateId( Course.DATA_TYPE, course_id );
+  Id folderId = Id.generateId( Content.DATA_TYPE, folder_id );
+
+  ContentDbLoader loader = ContentDbLoader.Default.getInstance();
+  ContentDbPersister persister= ContentDbPersister.Default.getInstance();
   
   String contentType = mr.getParameter( "contentType");
   String resourceType = "";
@@ -99,12 +97,11 @@
 	  resourceType="resource/x-bbap-lti1-sample2";
 	  
   Content courseDoc = new Content();
-  courseDoc.setContentHandler(resourceType);
+  courseDoc.setContentHandler("resource/x-bbap-lti1-sample");
   courseDoc.setCourseId( courseId );
   courseDoc.setParentId( folderId );
   String title = mr.getParameter("title");
   courseDoc.setTitle( title );
-  courseDoc.setBody( bltiDescription );
   ExtendedData ed = new ExtendedData();
   ed.setValue("contentType", contentType);
   ed.setValue("customParameter1",mr.getParameter( "customParameter1"));
@@ -114,6 +111,12 @@
   courseDoc.setExtendedData(ed);
   courseDoc.setIsAvailable(true);
   courseDoc.validate();
+  persister.persist( courseDoc );
+  
+  String bltiLink = PlugInUtil.getUri("bbdn", "lti1.1 Sample", "contentHandlers/view.jsp?content_id=" + courseDoc.getId().getExternalString() + "&course_id=" + course_id);
+  FormattedText bltiDescription = new FormattedText("Basic LTI Connection to IMS Global via Blackboard Building Block API. Click <a href=\"" + bltiLink + "\">here</a> to launch.",FormattedText.Type.SMART_TEXT);
+  
+  courseDoc.setBody( bltiDescription );
   persister.persist( courseDoc );
   
   String strReturnUrl = PlugInUtil.getEditableContentReturnURL( courseDoc.getParentId(), courseId ); 
@@ -130,6 +133,7 @@
   gi.setVisibleToStudents(true);
   
   giManager.persistGradebookItem(gi);
+
   
 %>
 

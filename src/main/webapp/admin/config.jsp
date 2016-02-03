@@ -55,7 +55,9 @@ java.util.*,
 java.util.prefs.*,
 javax.servlet.http.HttpServletRequest, 
 blackboard.platform.vxi.data.VirtualInstallation,
-blackboard.platform.vxi.service.VirtualInstallationManagerFactory"
+blackboard.platform.vxi.service.VirtualInstallationManagerFactory,
+blackboard.data.blti.BasicLTIPlacement,
+blackboard.persist.blti.BasicLTIPlacementDAO"
 
 %>
 
@@ -70,15 +72,39 @@ blackboard.platform.vxi.service.VirtualInstallationManagerFactory"
   
   private void saveProps( HttpServletRequest request ) throws IOException
   {
+	  ContentHandler handler = null;
+	  
 	  Preferences prefs = Preferences.systemRoot();
       prefs.put( BLTI_URL, request.getParameter( BLTI_URL ) );
       prefs.put( BLTI_KEY, request.getParameter( BLTI_KEY ) );
       prefs.put( BLTI_SECRET, request.getParameter( BLTI_SECRET ) );
+      
       try{
     	  prefs.flush();
       } catch(BackingStoreException bse) {
     	  
       }
+      
+      try {
+    	  handler = ContentHandlerDbLoader.Default.getInstance().loadByHandle("resource/x-bbap-lti1-sample");
+      } catch (Exception e) {
+    	  handler = new ContentHandler();
+    	  handler.setHandle("resource/x-bbap-lti1-sample");
+    	  try {
+    	  	ContentHandlerDbPersister.Default.getInstance().persist(handler);
+    	  } catch (Exception pe ) {
+    		  throw new IOException("Failed to persist ContentHandler resource/x-bbap-lti1-sample");
+    	  }
+   	  }
+      
+      BasicLTIPlacement placement = new BasicLTIPlacement();
+      placement.setAllowGrading(true);
+      placement.setContentHandler(handler);
+      placement.setDescription("Custom LTI Placement");
+      placement.setName("Custom LTI Placement");
+      
+      BasicLTIPlacementDAO placementDao = BasicLTIPlacementDAO.Factory.getInstance();
+      placementDao.persist(placement);
   }
 %>
 <bbNG:genericPage title="Configure Basic LTI Sample Plug-in" entitlement="system.admin.VIEW">

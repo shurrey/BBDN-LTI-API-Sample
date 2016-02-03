@@ -12,7 +12,7 @@ group "com.blackboard.developer"
 version "1.0-SNAPSHOT"
 
 ext {
-  learnVersion = "9.1.120113.0"
+  learnVersion = "9.1.201510.1171621"
   deployServer = "localhost:9876"
   deployInstance = "BBLEARN"
 }
@@ -20,7 +20,7 @@ ext {
 repositories {
   mavenCentral()
   maven {
-    url "https://maven.blackboard.com/content/repositories/releases/"
+    url "https://bbprepo.blackboard.com/content/repositories/releases/"
   }
 }
 

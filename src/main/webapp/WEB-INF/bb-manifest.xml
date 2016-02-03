@@ -54,7 +54,7 @@
       <description value="Blackboard Developers Network" />
     </vendor>
     <http-actions>
-      <config value="admin/config.jsp"/>
+      <config value="config.jsp"/>
       <remove value="admin/remove.jsp"/>
     </http-actions>
     
@@ -169,6 +169,9 @@
       <permission type="runtime" name ="preferences"/>
       <permission type="blackboard.platform.blti.BasicLTIPermission" name="wiscrowd.appspot.com" actions="sendroles,sendemail,sendname"/>
       <permission type="blackboard.platform.blti.BasicLTIPermission" name="www.imsglobal.org" actions="sendroles,sendemail,sendname"/>
+      <permission type="blackboard.platform.blti.BasicLTIPermission" name="dr-chuck.com" actions="sendroles,sendemail,sendname"/>
+      <permission type="blackboard.platform.blti.BasicLTIPermission" name="localhost" actions="sendroles,sendemail,sendname"/>
+      <permission type="blackboard.platform.blti.BasicLTIPermission" name="54.242.225.150" actions="sendroles,sendemail,sendname"/>
     </permissions>
   </plugin>
 

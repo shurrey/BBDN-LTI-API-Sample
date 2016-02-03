@@ -55,19 +55,17 @@
                 blackboard.platform.security.*,
                 blackboard.platform.session.*,
                 blackboard.servlet.data.*,
-                blackboard.platform.db.*" 
+                blackboard.platform.db.*,
+                blackboard.util.UrlUtil" 
 	errorPage="/error.jsp"
 %>
 
 <%@ taglib uri="/bbNG" prefix="bbNG" %>
 
-<bbNG:learningSystemPage>
+<bbNG:learningSystemPage ctxId="ctx" entitlement="course.content.CREATE">
 
-<bbNG:jspBlock>
+
 <%
-  if (!PlugInUtil.authorizeForCourseEditableContent(request, response))
-    return;
-
   String title = "";
   String contentType="";
   String customParameter1 = "";
@@ -75,35 +73,26 @@
   String customParameter3 = "";
   String customParameter4 = "";
   
-  BbPersistenceManager bbPm = PersistenceServiceFactory.getInstance().getDbPersistenceManager();
-  Container bbContainer = bbPm.getContainer();
-
-  Id contentId = new PkId( bbContainer, CourseDocument.DATA_TYPE, request.getParameter("content_id") );
-  Id courseId = bbPm.generateId( Course.DATA_TYPE, request.getParameter( "course_id" ) );
+  String course_id = request.getParameter( "course_id" );
+  String content_id = request.getParameter("content_id");
+  
   contentType = request.getParameter("contentType");
   
-  ContentDbLoader courseDocumentLoader = (ContentDbLoader) bbPm.getLoader( ContentDbLoader.TYPE );
-  Content courseDocFolder = courseDocumentLoader.loadById( contentId );
-  
-  FileLocation fl = new ContentFileLocation( null, bbContext, request );
-  pageContext.setAttribute("canclURL",PlugInUtil.getEditableContentReturnURL(contentId, courseId));
-  pageContext.setAttribute("fl",fl);
-  pageContext.setAttribute("contentType", contentType);
 %>
-</bbNG:jspBlock>
+
 
 <bbNG:breadcrumbBar environment="CTRL_PANEL" navItem="content" isContent="true" >
-    <bbNG:breadcrumb title="Add IMS GLobal Basic LTI Sample ${contentType}" />
+    <bbNG:breadcrumb title="Add IMS GLobal Basic LTI Sample <%=contentType%>" />
 </bbNG:breadcrumbBar>
 
 <bbNG:pageHeader>
-  <bbNG:pageTitleBar title="Add IMS GLobal Basic LTI Sample ${contentType}" iconUrl="../images/bbapLogo.gif" />
+  <bbNG:pageTitleBar title="Add IMS GLobal Basic LTI Sample <%=contentType%>" iconUrl="../images/bbapLogo.gif" />
 </bbNG:pageHeader>
 
   <bbNG:form action="create_proc.jsp" method="post" enctype="multipart/form-data" onsubmit="finalizeEditors(); return true;">
-    <input type=hidden name=content_id value="${param.content_id}">
-    <input type=hidden name=course_id value="${param.course_id}">
-    <input type=hidden name=contentType value="${contentType}">
+    <input type=hidden name=content_id value="<%=content_id%>">
+    <input type=hidden name=course_id value="<%=course_id%>">
+    <input type=hidden name=contentType value="<%=contentType%>">
   
 	<bbNG:dataCollection>
     <bbNG:step title="Enter IMS GLobal Basic LTI Sample Content Information">
@@ -128,14 +117,8 @@
 	 </bbNG:dataElement>
 	 
     </bbNG:step>
-    
-    <input type=hidden name=title value="${title}">
-  	<input type=hidden name=customParameter1 value="${customParameter1}">
-  	<input type=hidden name=customParameter2 value="${customParameter2}">
-  	<input type=hidden name=customParameter3 value="${customParameter3}">
-  	<input type=hidden name=customParameter4 value="${customParameter4}">
   	
-  	<bbNG:stepSubmit title="Submit" cancelUrl='${canclURL}' />
+  	<bbNG:stepSubmit title="Submit" />
    </bbNG:dataCollection>
 
   </bbNG:form>

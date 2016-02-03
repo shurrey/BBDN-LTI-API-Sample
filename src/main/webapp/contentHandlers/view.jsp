@@ -59,95 +59,23 @@
                 blackboard.platform.session.*,
                 blackboard.servlet.data.*,
                 blackboard.platform.db.*,
-                blackboard.platform.blti.*" 
+                blackboard.platform.blti.*,
+                com.blackboard.developer.LtiLauncher" 
     errorPage="/error.jsp"
 %>
 
 <%@ taglib uri="/bbNG" prefix="bbNG"%>
 
-<bbNG:learningSystemPage ctxId="ctx">
+<bbNG:learningSystemPage ctxId="ctx" entitlement="course.content.VIEW">
 
 <%
-  final String BLTI_URL 	= "bltiUrl";
-  final String BLTI_KEY 	= "bltiKey";
-  final String BLTI_SECRET	= "bltiSecret";
-
-  File _configFile = null;
-  String bltiUrl = "";
-  String bltiKey = "";
-  String bltiSecret = "";
-  
-  if (!PlugInUtil.authorizeForCourse(request, response))
-    return;
-
-  Preferences prefs = Preferences.systemRoot();
-  bltiUrl = prefs.get( BLTI_URL,"http://www.imsglobal.org/developers/LTI/test/v1p1/tool.php" );
-  bltiKey = prefs.get( BLTI_KEY, "blti_key_default" );
-  bltiSecret = prefs.get( BLTI_SECRET, "secret" );
-  
-  BbPersistenceManager bbPm = PersistenceServiceFactory.getInstance().getDbPersistenceManager();
-  Container bbContainer = bbPm.getContainer();
-
   User user=ctx.getUser();
   Course course=ctx.getCourse();
   
-  Id courseId = bbPm.generateId(Course.DATA_TYPE, request.getParameter("course_id"));
-  Id userId = user.getId();
+  Id contentId = Id.generateId(Content.DATA_TYPE, request.getParameter("content_id") );
+	
+  BasicLTILauncher launcher = LtiLauncher.buildLauncher(course.getId(), contentId, user.getId(), request);
   
-  CourseMembershipDbLoader cmLoader = (CourseMembershipDbLoader) bbPm.getLoader(CourseMembershipDbLoader.TYPE);
-  CourseMembership membership = cmLoader.loadByCourseAndUserId(courseId, userId);
-  
-  Id contentId = bbPm.generateId(CourseDocument.DATA_TYPE, request.getParameter("content_id") );
-
-  ContentDbLoader courseDocumentLoader = (ContentDbLoader) bbPm.getLoader( ContentDbLoader.TYPE );
-  Content courseDoc = courseDocumentLoader.loadById( contentId );
-
-  String contentHandler = courseDoc.getContentHandler();
-  String contentType = "";
-  
-  if (contentHandler == "resource/x-bbap-lti1-sample2")
-	  contentType = "Assessment";
-  else
-	  contentType = "Content";
-  // create a map for storing custom Basic LTI Parameters 
-  HashMap<String,String> customParamMap = new HashMap<String,String>();
-  
-  // Add custom BLTI Parameters
-  customParamMap.put("contentType",contentType.toString());
-  customParamMap.put("customParameter1",courseDoc.getExtendedData().getValue("customParameter1"));
-  customParamMap.put("customParameter2",courseDoc.getExtendedData().getValue("customParameter2"));
-  customParamMap.put("customParameter3",courseDoc.getExtendedData().getValue("customParameter3"));
-  customParamMap.put("customParameter4",courseDoc.getExtendedData().getValue("customParameter4"));
-  
-  //create a map for storing custom presentation parameters
-  HashMap<String,String> customPresentationParams = new HashMap<String,String> ();
-  String strReturnUrl = PlugInUtil.getEditableContentReturnURL(courseDoc.getParentId(), courseId);
-  
-  //add custom presentation parameters
-  customPresentationParams.put("PARAM_LAUNCH_PRESENTATION_RETURN_URL",strReturnUrl.toString());
-
-  /* 
-   *		Instantiate BasicLTILauncher object
-   *		BasicLTILauncher(String url, String key, String secret, String resourceLinkID)
-   *			.addResourceLinkInformation(String title, String description)
-   *			.addCurrentUserInformation(boolean includeRole, boolean includeName, boolean includeEmail)
-   *			.addCurrentCourseInformation(void)
-   *			.addCustomToolParameters (Map<String, String> params)
-   *			.addLaunchPresentationInformation (Map<String,String> params);
-   */
-  BasicLTILauncher launcher = new BasicLTILauncher( bltiUrl, bltiKey, bltiSecret, contentHandler.toString() )
-   		.addResourceLinkInformation( "IMS Global " + contentType, "Basic LTI Connection to the IMS Global " + contentType )
-   		.addCurrentUserInformation( true, true, true )
-   		.addCurrentCourseInformation()
-   		.addCustomToolParameters( customParamMap )
-   		// IF SP14 or earlier, use this one:
-   		.addGradingInformation(courseDoc, ctx.getCourseMembership())
-   		// IF April Release, Use this one:
-   		//.addGradingInformation(request, courseDoc, ctx.getCourseMembership())
-   		.addLaunchPresentationInformation(customPresentationParams);
-   
-   //Launch BLTI connection 
-   //launch(HttpServletRequest request, HttpServletResponse response, boolean showSplashScreen, FormattedText splashMessage) 
 	launcher.launch( request, response, false, null );
 %>
 </bbNG:learningSystemPage>
