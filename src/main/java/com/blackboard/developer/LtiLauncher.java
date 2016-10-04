@@ -28,7 +28,7 @@ public abstract class LtiLauncher {
 		Content courseDoc = null;
 		CourseMembership membership = null;
   
-		Preferences prefs = Preferences.systemRoot();
+		Preferences prefs = Preferences.systemNodeForPackage(PrefUtil.class);
 		bltiUrl = prefs.get( BLTI_URL,"http://54.242.225.150/lti" );
 		bltiKey = prefs.get( BLTI_KEY, "12345" );
 		bltiSecret = prefs.get( BLTI_SECRET, "secret" );
