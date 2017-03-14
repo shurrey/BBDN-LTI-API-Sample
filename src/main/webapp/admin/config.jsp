@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /* Copyright (C) 2011, Blackboard Inc.
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
@@ -11,10 +11,10 @@
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
  *
- *  -- Neither the name of Blackboard Inc. nor the names of its contributors 
- *     may be used to endorse or promote products derived from this 
+ *  -- Neither the name of Blackboard Inc. nor the names of its contributors
+ *     may be used to endorse or promote products derived from this
  *     software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY BLACKBOARD INC ``AS IS'' AND ANY
  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -26,16 +26,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 /*
  *	Author: 				Scott Hurrey
  *	Description:			Configuration Page for Basic LTI Launcher Building Block
  *	Date Created:			12/03/2010
- *	Comments:				
- *	ToDo:					
+ *	Comments:
+ *	ToDo:
  */
  -->
- 
+
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ page import="java.util.*,
@@ -51,9 +51,9 @@ blackboard.platform.persistence.*,
 blackboard.platform.plugin.*,
 blackboard.platform.db.*,
 java.io.*,
-java.util.*, 
+java.util.*,
 java.util.prefs.*,
-javax.servlet.http.HttpServletRequest, 
+javax.servlet.http.HttpServletRequest,
 blackboard.platform.vxi.data.VirtualInstallation,
 blackboard.platform.vxi.service.VirtualInstallationManagerFactory,
 blackboard.data.blti.BasicLTIPlacement,
@@ -63,49 +63,27 @@ blackboard.persist.blti.BasicLTIPlacementDAO"
 
 <%@ taglib uri="/bbNG" prefix="bbNG"%>
 <%!
-  
+
   static final String BLTI_URL 		= "bltiUrl";
   static final String BLTI_KEY 		= "bltiKey";
   static final String BLTI_SECRET	= "bltiSecret";
-  
+
   File _configFile = null;
-  
+
   private void saveProps( HttpServletRequest request ) throws IOException
   {
 	  ContentHandler handler = null;
-	  
-	  Preferences prefs = Preferences.systemRoot();
+
+	    Preferences prefs = Preferences.systemNodeForPackage(PrefUtil.class);
       prefs.put( BLTI_URL, request.getParameter( BLTI_URL ) );
       prefs.put( BLTI_KEY, request.getParameter( BLTI_KEY ) );
       prefs.put( BLTI_SECRET, request.getParameter( BLTI_SECRET ) );
-      
+
       try{
     	  prefs.flush();
       } catch(BackingStoreException bse) {
-    	  
+
       }
-      
-      try {
-    	  handler = ContentHandlerDbLoader.Default.getInstance().loadByHandle("resource/x-bbap-lti1-sample");
-      } catch (Exception e) {
-    	  handler = new ContentHandler();
-    	  handler.setHandle("resource/x-bbap-lti1-sample");
-    	  try {
-    	  	ContentHandlerDbPersister.Default.getInstance().persist(handler);
-    	  } catch (Exception pe ) {
-    		  throw new IOException("Failed to persist ContentHandler resource/x-bbap-lti1-sample");
-    	  }
-   	  }
-      
-      BasicLTIPlacement placement = new BasicLTIPlacement();
-      placement.setAllowGrading(true);
-      placement.setContentHandler(handler);
-      placement.setDescription("Custom LTI Placement");
-      placement.setName("Custom LTI Placement");
-      
-      BasicLTIPlacementDAO placementDao = BasicLTIPlacementDAO.Factory.getInstance();
-      placementDao.persist(placement);
-  }
 %>
 <bbNG:genericPage title="Configure Basic LTI Sample Plug-in" entitlement="system.admin.VIEW">
   <bbNG:jspBlock>
@@ -113,18 +91,18 @@ blackboard.persist.blti.BasicLTIPlacementDAO"
         String bltiUrl = "";
         String bltiKey = "";
         String bltiSecret = "";
-          
+
         if( request.getMethod().equals( "POST" ) )
         {
           saveProps( request );
           response.sendRedirect("../../blackboard/admin/manage_plugins.jsp");
         }
-      
-        Preferences prefs = Preferences.systemRoot();
+
+        Preferences prefs = Preferences.systemNodeForPackage(PrefUtil.class);
         bltiUrl = prefs.get( BLTI_URL,"http://www.imsglobal.org/developers/LTI/test/v1p1/tool.php" );
         bltiKey = prefs.get( BLTI_KEY, "blti_key_default" );
         bltiSecret = prefs.get( BLTI_SECRET, "secret" );
-      
+
         pageContext.setAttribute("bltiUrl",bltiUrl);
         pageContext.setAttribute("bltiKey",bltiKey);
         pageContext.setAttribute("bltiSecret",bltiSecret);

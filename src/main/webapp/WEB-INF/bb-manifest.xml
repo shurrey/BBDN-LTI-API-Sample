@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<!--
 /* Copyright (C) 2011, Blackboard Inc.
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
@@ -12,10 +12,10 @@
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
  *
- *  - Neither the name of Blackboard Inc. nor the names of its contributors 
- *     may be used to endorse or promote products derived from this 
+ *  - Neither the name of Blackboard Inc. nor the names of its contributors
+ *     may be used to endorse or promote products derived from this
  *     software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY BLACKBOARD INC ``AS IS'' AND ANY
  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -27,13 +27,13 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 /*
  *	Author: 				Scott Hurrey
  *	Description:			bb-manifest file for Basic LTI Launcher Building Block
  *	Date Created:			12/03/2010
- *	Comments:				
- *	ToDo:					
+ *	Comments:
+ *	ToDo:
  */
 -->
 <manifest>
@@ -57,9 +57,9 @@
       <config value="config.jsp"/>
       <remove value="admin/remove.jsp"/>
     </http-actions>
-    
+
     <!-- Custom content types defined by this extension -->
-    <content-handlers>
+    <!--<content-handlers>
       <content-handler>
         <name value="IMS Global Content"/>
         <handle value= "resource/x-bbap-lti1-sample1"/>
@@ -98,8 +98,25 @@
          </type>
         </types>
       </content-handler>
-    </content-handlers>
-    
+    </content-handlers> -->
+
+    <lti-tool-providers>
+    	<provider-domain>
+    		<domain-name value="localhost"/>
+				<placements>
+					<placement>
+						<placement-label-default value="LTI B2"/>
+						<placement-handle value="lti-test"/>
+						<placement-type value="C"/>
+						<placement-content-type value=""/>
+						<placement-allow-grading value="true"/>
+						<placement-provider-url value="http://localhost:3000/lti"/>
+					</placement>
+				</placements>
+    	</provider-domain>
+    </lti-tool-providers>
+
+
     <!-- Tools defined by this extension -->
     <application-defs>
       <application handle="lti1.1Sample" type="shared" use-ssl="false" name="LTI 1.1 Sample" can-allow-guest="false"
@@ -109,7 +126,7 @@
          <small value="images/bbapSmall.gif"/>
          <tree value="images/bbapSmall.gif"/>
          <large value="images/bbapLogo.gif"/>
-        </icons>        
+        </icons>
         <links>
           <link>
             <type value="tool"/>
@@ -150,7 +167,7 @@
         </links>
       </application>
     </application-defs>
-    
+
         <!-- code permissions required for proper operation -->
     <permissions>
       <permission type="persist" name="*" actions="create,modify,delete,persist"/>
@@ -171,7 +188,7 @@
       <permission type="blackboard.platform.blti.BasicLTIPermission" name="www.imsglobal.org" actions="sendroles,sendemail,sendname"/>
       <permission type="blackboard.platform.blti.BasicLTIPermission" name="dr-chuck.com" actions="sendroles,sendemail,sendname"/>
       <permission type="blackboard.platform.blti.BasicLTIPermission" name="localhost" actions="sendroles,sendemail,sendname"/>
-      <permission type="blackboard.platform.blti.BasicLTIPermission" name="54.242.225.150" actions="sendroles,sendemail,sendname"/>
+      <permission type="blackboard.platform.blti.BasicLTIPermission" name="107.22.54.217" actions="sendroles,sendemail,sendname"/>
     </permissions>
   </plugin>
 

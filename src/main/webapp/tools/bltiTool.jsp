@@ -11,10 +11,10 @@
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
  *
- *  -- Neither the name of Blackboard Inc. nor the names of its contributors 
- *     may be used to endorse or promote products derived from this 
+ *  -- Neither the name of Blackboard Inc. nor the names of its contributors
+ *     may be used to endorse or promote products derived from this
  *     software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY BLACKBOARD INC ``AS IS'' AND ANY
  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,7 +31,7 @@
  *	Author: 				Scott Hurrey
  *	Description:			Tool for Basic LTI Launcher Building Block
  *	Date Created:			12/03/2010
- *	Comments:				
+ *	Comments:
  *	ToDo:					Build bltiLauncher when user clicks on content item.
  */
 --%>
@@ -59,7 +59,7 @@
                 blackboard.platform.session.*,
                 blackboard.servlet.data.*,
                 blackboard.platform.db.*,
-                blackboard.platform.blti.*" 
+                blackboard.platform.blti.*"
     errorPage="/error.jsp"
 %>
 
@@ -77,15 +77,15 @@
   String bltiUrl = "";
   String bltiKey = "";
   String bltiSecret = "";
-  
+
   if (!PlugInUtil.authorizeForCourse(request, response))
     return;
-  
+
   HashMap<String,String> customParamMap = new HashMap<String,String>();
-  
+
   customParamMap.put("linkType","Blackboard Tool");
-  
-  Preferences prefs = Preferences.systemRoot();
+
+  Preferences prefs = Preferences.systemNodeForPackage(PrefUtil.class);
   bltiUrl = prefs.get( BLTI_URL,"http://www.imsglobal.org/developers/LTI/test/v1p1/tool.php" );
   bltiKey = prefs.get( BLTI_KEY, "blti_key_default" );
   bltiSecret = prefs.get( BLTI_SECRET, "secret" );
@@ -101,7 +101,7 @@
 </bbNG:pageHeader>
 
 <%
-/* 
+/*
  *	Instantiate BasicLTILauncher object
  *	BasicLTILauncher(String url, String key, String secret, String resourceLinkID)
  *		.addResourceLinkInformation(String title, String description)
@@ -116,9 +116,8 @@
        .addCurrentCourseInformation()
        .addCustomToolParameters( customParamMap );
 
-	//Launch BLTI connection 
+	//Launch BLTI connection
 	//launch(HttpServletRequest request, HttpServletResponse response, boolean showSplashScreen, FormattedText splashMessage)
  	launcher.launch( request, response, false, null );
 %>
 </bbNG:learningSystemPage>
-
